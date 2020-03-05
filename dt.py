@@ -14,27 +14,21 @@ def gini_index(groups, classes):
     # print("GIN INDEX:")
     # print(groups)
     # print(classes)
-    # count all samples at split point
-    n_instances = float(sum([len(group) for group in groups]))
+    n_instances = float(sum([len(group) for group in groups]))  # count all samples at split point
     # print(n_instances)
-    # sum weighted Gini index for each group
     gini = 0.0
-    for group in groups:
+    for group in groups:  # sum weighted Gini index for each group
         size = float(len(group))
-        # avoid divide by zero
         if size == 0:
-            continue
+            continue  # avoid divide by zero
         score = 0.0
-        # score the group based on the score for each class
-        for class_val in classes:
+        for class_val in classes:  # score the group based on the score for each class
             p = [row[-1] for row in group].count(class_val) / size
             score += p * p
-        # weight the group score by its relative size
-        gini += (1.0 - score) * (size / n_instances)
+        gini += (1.0 - score) * (size / n_instances)  # weight the group score by its relative size
     return gini
 
 
-# Select the best split point for a dataset
 def get_split(dataset):
     # print(dataset)
     class_values = list(set(row[-1] for row in dataset))  # CLASS BY RESULT
@@ -51,13 +45,11 @@ def get_split(dataset):
     return {'index': b_index, 'value': b_value, 'groups': b_groups, 'score': b_score}
 
 
-# Create a terminal node value
 def to_terminal(group):
     outcomes = [row[-1] for row in group]
     return max(set(outcomes), key=outcomes.count)
 
 
-# Create child splits for a node or make terminal
 def split(node, max_depth, min_size, depth):
     left, right = node['groups']
     del (node['groups'])
@@ -83,7 +75,6 @@ def split(node, max_depth, min_size, depth):
         split(node['right'], max_depth, min_size, depth + 1)
 
 
-# Build a decision tree
 def build_tree(train, max_depth, min_size):
     # print(train)
     root = get_split(train)
@@ -91,7 +82,6 @@ def build_tree(train, max_depth, min_size):
     return root
 
 
-# Make a prediction with a decision tree
 def predict(node, row):
     if row[node['index']] < node['value']:
         if isinstance(node['left'], dict):
@@ -105,8 +95,10 @@ def predict(node, row):
             return node['right']
 
 
-# Classification and Regression Tree Algorithm
 def decision_tree(train, test, max_depth, min_size):
+    """"
+        cart algorithm
+    """
     tree = build_tree(train, max_depth, min_size)
     # print(tree)
     predictions = list()

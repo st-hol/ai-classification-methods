@@ -1,7 +1,5 @@
 from math import sqrt
 
-
-# Calculate the Euclidean distance between two vectors
 def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1) - 1):
@@ -9,7 +7,6 @@ def euclidean_distance(row1, row2):
     return sqrt(distance)
 
 
-# Locate the most similar neighbors
 def get_neighbors(train, test_row, num_neighbors):
     distances = list()
     for train_row in train:
@@ -22,7 +19,6 @@ def get_neighbors(train, test_row, num_neighbors):
     return neighbors
 
 
-# Make a prediction with neighbors
 def predict_classification(train, test_row, num_neighbors):
     neighbors = get_neighbors(train, test_row, num_neighbors)
     output_values = [row[-1] for row in neighbors]
@@ -30,8 +26,10 @@ def predict_classification(train, test_row, num_neighbors):
     return prediction
 
 
-# kNN Algorithm
 def k_nearest_neighbors(train, test, num_neighbors):
+    """"
+         kNN Algorithm
+    """
     predictions = list()
     for row in test:
         output = predict_classification(train, row, num_neighbors)
